@@ -1,7 +1,11 @@
 import cartModel from "../models/carts.js";
 import Product from "./products.dao.js";
 import Ticket from "./ticket.dao.js";
+import User from "./users.dao.js";
+import MailingService from "../../services/mailing.js";
 
+const mailingService = new MailingService();
+const userService = new User();
 const productService = new Product();
 const ticketService = new Ticket();
 
@@ -98,7 +102,6 @@ export default class Cart {
   };
   purchase = async (cid, email) => {
     const cart = await this.getCartById(cid);
-
     const notPurchasedIds = [];
     let totalAmount = 0;
 
@@ -118,7 +121,11 @@ export default class Cart {
     }
 
     if (totalAmount > 0) {
-      await ticketService.generate(email, totalAmount);
+      const ticket = await ticketService.generate(email, totalAmount);
+      const user = await userService.getByEmail(email);
+      if (user) {
+        mailingService.sendTicketMail(user.first_name, user.email, ticket);
+      }
     }
 
     return notPurchasedIds;

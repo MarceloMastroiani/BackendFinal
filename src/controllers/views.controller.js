@@ -51,8 +51,9 @@ export const viewProducts = async (req, res) => {
     ? `http://localhost:8080/products?limit=${result.limit}&page=${result.prevPage}&sort=${result.sort}`
     : "";
 
-  const cart = await cartService.getCartById(req.user.cart._id);
   let user = req.session.user;
+
+  const cart = await cartService.getCartById(req.user.cart._id);
 
   res.render("product", { ...result, user, cart });
 };

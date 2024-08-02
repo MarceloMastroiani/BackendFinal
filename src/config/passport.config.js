@@ -98,6 +98,7 @@ const initializePassport = () => {
               age: 20,
               email: profile._json.email,
               password: "",
+              cart: await cartService.createCart(),
             };
 
             let createdUser = await userModel.create(newUser);

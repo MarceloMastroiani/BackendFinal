@@ -5,9 +5,6 @@ import {
   ticketService,
 } from "../repositories/service.js";
 import logger from "../utils/logger.js";
-import MailingService from "../services/mailing.js";
-
-const mailingService = new MailingService();
 
 export const cartByIdd = async (req, res) => {
   let id = req.params.cid;
@@ -100,14 +97,7 @@ export const purchase = async (req, res) => {
 
   try {
     const remainingProducts = await cartService.purchase(cid, email);
-    const user = await userService.getByEmail(email);
-    const now = new Date().toLocaleString();
 
-    if (user) {
-      let ticket = await ticketService.getbyemailandDate(email, now);
-      mailingService.sendTicketMail(user.first_name, user.email, ticket);
-    }
-    // console.log(remainingProducts, "remainingProducts");
     res.send({ status: "success", payload: remainingProducts });
   } catch (error) {
     return res

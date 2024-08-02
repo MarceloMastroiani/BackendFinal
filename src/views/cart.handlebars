@@ -14,5 +14,25 @@
 <button onclick="purchaseCart('{{response._id}}','{{user.email}}')">Comprar</button>
 
 
-<script src="/js/products.js"></script>
+{{!-- <script src="/js/products.js"></script> --}}
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    
+    function purchaseCart(cartId, email){
+  fetch(`/api/carts/${cartId}/${email}/purchase`, {
+    method: "GET",
+  }).then((res) => {
+    if (res.status == 200) {
+        Swal.fire({
+        title: "Compra exitosa!",
+        text: "Presiona OK para volver a la página principal.",
+        icon: "success"
+    }).then(() => {
+            window.location.replace("/products");
+        });
+     }
+  });
+}
+</script>
